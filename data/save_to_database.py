@@ -1,17 +1,17 @@
 from IMDB_Actors.data import db_helper as con, db_helper
-from IMDB_Actors.data import queries
+from IMDB_Actors.data.queries import insert_queries
 
 
 def save_actor(actor):
     connection = con.create_connection_to_scheme("localhost", "anna", "1234", "imdb")
-    query = queries.insert_into_query("actors", actor)
+    query = insert_queries.insert_into_query("actors", actor)
     db_helper.execute_query(connection, query)
 
 
 def save_awards(award):
     connection = con.create_connection_to_scheme("localhost", "anna", "1234", "imdb")
 
-    get_award_query = queries.get_id_from_award(award["category"], award["year"], award["title"])
+    get_award_query = insert_queries.get_id_from_award(award["category"], award["year"], award["title"])
     award_reply = db_helper.execute_read_query(connection, get_award_query)
 
     if len(award_reply) == 0:
@@ -20,7 +20,7 @@ def save_awards(award):
             "year": award["year"],
             "category": award["category"]
         }
-        save_award_query = queries.insert_into_query("awards", save_obj)
+        save_award_query = insert_queries.insert_into_query("awards", save_obj)
         db_helper.execute_query(connection, save_award_query)
         award_reply = db_helper.execute_read_query(connection, get_award_query)
 
@@ -33,14 +33,14 @@ def save_awards(award):
         "awardID": id,
         "description": award["description"]
     }
-    save_con_qu = queries.insert_into_query("actors_have_awards", save_link_obj)
+    save_con_qu = insert_queries.insert_into_query("actors_have_awards", save_link_obj)
     db_helper.execute_query(connection, save_con_qu)
 
 
 def save_movie(movie):
     connection = con.create_connection_to_scheme("localhost", "anna", "1234", "imdb")
 
-    is_already_saved_query = queries.is_movie_in_database(movie["movieID"])
+    is_already_saved_query = insert_queries.is_movie_in_database(movie["movieID"])
     amount = db_helper.execute_read_query(connection, is_already_saved_query)
     actor = movie["actor"]
     del movie["actor"]
@@ -50,7 +50,7 @@ def save_movie(movie):
         del movie["genres"]
 
     if amount[0][0] == 0:
-        save_award_query = queries.insert_into_query("movies", movie)
+        save_award_query = insert_queries.insert_into_query("movies", movie)
         db_helper.execute_query(connection, save_award_query)
 
     # save genre
@@ -59,7 +59,7 @@ def save_movie(movie):
             "title": "\'" + genre + "\'",
             "movieID": movie["movieID"]
         }
-        query = queries.insert_into_query("genres", save_genre_obj)
+        query = insert_queries.insert_into_query("genres", save_genre_obj)
         db_helper.execute_query(connection, query)
 
     # link movie to actor
@@ -68,5 +68,5 @@ def save_movie(movie):
         "movieID": movie["movieID"]
     }
 
-    query = queries.insert_into_query("actors_in_movies", act_obj)
+    query = insert_queries.insert_into_query("actors_in_movies", act_obj)
     db_helper.execute_query(connection, query)

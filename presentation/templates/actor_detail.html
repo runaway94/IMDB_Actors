@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../static/style/style.css">
+
+
+    <title>About {{actor.name}}</title>
+</head>
+<body>
+<!-- Image and text -->
+<nav class="navbar navbar-dark bg-dark justify-content-center" style="text-align: center">
+    <a class="navbar-brand" href="/" style="text-align: center">
+        <img src="../static/images/IMDB_Logo_.png" width="50" height="30" class="d-inline-block align-top"
+             alt="">
+        Actors Data Analyses
+    </a>
+</nav>
+
+
+<div class="content">
+    <div class="card actor-card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="#">Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Awards</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title">{{actor.name}} <span style="float: right;"> <div class="actor_rating">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-star-fill"
+             viewBox="0 0 16 16">
+  <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+</svg>
+                </svg> {{actor.rating}}</div></span></h3>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <img src="{{actor.image}}"
+                             title="" alt="" class="actor-image">
+                    </div>
+                    <div class="col-9">
+                        <div class="row actor-details-row">
+                            <div class="col">
+                                Born: <b>{{actor.birth}}</b>
+                            </div>
+                            <div class="col">
+                                Gender: <b>{{actor.gender}}</b>
+                            </div>
+                        </div>
+                        <div class="row actor-details-row">
+                            <div class="col">
+                                Top Movie: <b>{{actor.top_movie}}</b>
+                            </div>
+                            <div class="col">
+                                Newest Movie: <b>{{actor.new_movie}}</b>
+                            </div>
+                        </div>
+                        <div class="row actor-details-row">
+                            <div class="col">
+                                Top Genre: <b>{{actor.top_genre}}</b>
+                            </div>
+                            <div class="col">
+                                Last Award: <b>{{actor.last_award}}</b>
+                            </div>
+                        </div>
+
+                        <div class="row stats">
+                            <div class="col stats-col">
+                                <div class="number-stats">
+                                    <h3 class="number-stats-heading">{{actor.movies}}</h3>
+                                    <p>Movies</p>
+                                </div>
+                            </div>
+                             <div class="col stats-col">
+                                <div class="number-stats">
+                                    <h3 class="number-stats-heading">{{actor.top_rating}}</h3>
+                                    <p>Top Movie Rating</p>
+                                </div>
+                            </div>
+                            <div class="col stats-col">
+                                <div class="number-stats">
+                                    <h3 class="number-stats-heading">{{actor.amount_awards}}</h3>
+                                    <p>Awards</p>
+                                </div>
+                            </div>
+                            <div class="col stats-col">
+                                <div class="number-stats">
+                                    <h3 class="number-stats-heading">{{actor.amount_wins}}</h3>
+                                    <p>Nominations</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bio">
+                <h5>Bio</h5>
+                <p class="card-text">{{actor.bio}}</p>
+            </div>
+        </div>
+    </div>
+    <a href="/" class="go-back-link"> go back to all actors</a>
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>
