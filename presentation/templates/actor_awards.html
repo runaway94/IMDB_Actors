@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../static/style/style.css">
+
+
+    <title>Movies of {{actor.name}}</title>
+</head>
+<body>
+<!-- Image and text -->
+<nav class="navbar navbar-dark bg-dark justify-content-center" style="text-align: center">
+    <a class="navbar-brand" href="/" style="text-align: center">
+        <img src="../static/images/IMDB_Logo_.png" width="50" height="30" class="d-inline-block align-top"
+             alt="">
+        Actors Data Analyses
+    </a>
+</nav>
+
+
+<div class="content">
+    <div class="card actor-card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link " href="actor?id={{actor.id}}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="movies?id={{actor.id}}">Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="awards?id={{actor.id}}">Awards</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title" style="margin-bottom: 20px;">Awards of {{actor.name}}</h3>
+
+            <div class="movie-charts my-par">
+
+
+                <div id="chartCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <h4>Wins and nominations in comparison to movies</h4>
+                            <figure>
+                                <img class="d-block w-100"
+                                     src="../static/images/award_charts/award_charts_{{actor.id}}.png"
+                                     alt="Wins and nominations in comparison to movies">
+                            </figure>
+                        </div>
+                        <div class="carousel-item">
+                             <h4>Wins compared to average wins of all actors</h4>
+                            <figure>
+                                <img class="d-block w-100"
+                                     src="../static/images/award_charts/award_compare_charts_{{actor.id}}.png"
+                                     alt="Wins compared to average wins of all actors">
+                            </figure>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#chartCarousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#chartCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="my-par">
+                <h4>All Awards</h4>
+                <table class="table awards-table" id="awards-table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th class="" scope="col">Year</th>
+                        <th class="" scope="col">Event</th>
+                        <th class="" scope="col">Title</th>
+                        <th class="" scope="col">Outcome</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {%for i in range(0, len)%}
+                    <tr>
+                        <td class="">{{awards[i].year}}</td>
+                        <td class="">{{awards[i].category}}</td>
+                        <td data-toggle="collapse" data-target="#collapseOne{{loop.index}}" aria-expanded="true"
+                            aria-controls="collapseOne">{{awards[i].title}}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-caret-down-square" viewBox="0 0 16 16">
+                                <path d="M3.626 6.832A.5.5 0 0 1 4 6h8a.5.5 0 0 1 .374.832l-4 4.5a.5.5 0 0 1-.748 0l-4-4.5z"/>
+                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2z"/>
+                            </svg>
+                        </td>
+                        <td class="">{{awards[i].outcome}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <div id="collapseOne{{loop.index}}" class="collapse" aria-labelledby="headingOne">
+                                {{awards[i].description}}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+    <a href="/" class="go-back-link"> go back to all actors</a>
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>

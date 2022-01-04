@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="../static/style/style.css">
+
+
+    <title>Movies of {{actor.name}}</title>
+</head>
+<body>
+<!-- Image and text -->
+<nav class="navbar navbar-dark bg-dark justify-content-center" style="text-align: center">
+    <a class="navbar-brand" href="/" style="text-align: center">
+        <img src="../static/images/IMDB_Logo_.png" width="50" height="30" class="d-inline-block align-top"
+             alt="">
+        Actors Data Analyses
+    </a>
+</nav>
+
+
+<div class="content">
+    <div class="card actor-card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+                <li class="nav-item">
+                    <a class="nav-link " href="actor?id={{actor.id}}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="movies?id={{actor.id}}">Movies</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="awards?id={{actor.id}}">Awards</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <h3 class="card-title" style="margin-bottom: 20px;">Movies with {{actor.name}}</h3>
+            <div class="my-par">
+                <h4>Top 5 movies</h4>
+                <table class="table movies-table" id="movies-table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th class="movie-num-col" scope="col">#</th>
+                        <th class="movie-title-col" scope="col">Title</th>
+                        <th class="movie-year-col" scope="col">Year</th>
+                        <th class="movie-runtime-col" scope="col">runtime</th>
+                        <th class="movie-rating-col" scope="col">rating</th>
+                        <th class="movie-genres-col" scope="col">Genres</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {%for i in range(0, 5)%}
+                    <tr>
+                        <th class="movie-num-col" scope="row">{{movies[i].pos}}</th>
+                        <td class="movie-title-col">{{movies[i].title}}</td>
+
+                        {%if movies[i].year==0%}
+                        <td class="movie-year-col" style="font-style: italic">unknown</td>
+                        {% else %}
+                        <td class="movie-year-col">{{movies[i].year}}</td>
+                        {% endif %}
+
+                        {%if movies[i].runtime==0%}
+                        <td class="movie-runtime-col" style="font-style: italic">unknown</td>
+                        {% else %}
+                        <td class="movie-runtime-col">{{movies[i].runtime}} minutes</td>
+                        {% endif %}
+
+                        {%if movies[i].rating==0%}
+                        <td class="movie-rating-col" style="font-style: italic">not rated</td>
+                        {% else %}
+                        <td class="movie-rating-col">{{movies[i].rating}}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                                 class="bi bi-star-fill movie-rating-table-star" viewBox="0 0 16 16">
+                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                            </svg>
+                        </td>
+                        {% endif %}
+                        <td class="movie-genres-col">{{movies[i].genres}}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <button class="btn btn-dark expand-movies-btn" type="button" data-toggle="collapse"
+                        data-target="#collapseExample"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    expand all movies
+                </button>
+
+                <div class="collapse" id="collapseExample">
+                    <table class="table movies-table">
+                        <tbody>
+                        {%for i in range(5, len)%}
+                        <tr>
+                            <th class="movie-num-col" scope="row">{{movies[i].pos}}</th>
+                            <td class="movie-title-col">{{movies[i].title}}</td>
+
+                            {%if movies[i].year==0%}
+                            <td class="movie-year-col" style="font-style: italic">unknown</td>
+                            {% else %}
+                            <td class="movie-year-col">{{movies[i].year}}</td>
+                            {% endif %}
+
+                            {%if movies[i].runtime==0%}
+                            <td class="movie-runtime-col" style="font-style: italic">unknown</td>
+                            {% else %}
+                            <td class="movie-runtime-col">{{movies[i].runtime}} minutes</td>
+                            {% endif %}
+
+                            {%if movies[i].rating==0%}
+                            <td class="movie-rating-col" style="font-style: italic">not rated</td>
+                            {% else %}
+                            <td class="movie-rating-col">{{movies[i].rating}}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"
+                                     class="bi bi-star-fill movie-rating-table-star" viewBox="0 0 16 16">
+                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                </svg>
+                            </td>
+                            {% endif %}
+                            <td class="movie-genres-col">{{movies[i].genres}}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="my-par">
+                <h3>Average movie rating per year</h3>
+                <div class="row">
+                    <div class="col-8">
+                        <h4> Total rating </h4>
+                        <div class="row total-mv-rating-rw">
+                            <div class="col total-mv-rating-cl">
+                                Rating: {{actor.rating}}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+                                     fill="currentColor"
+                                     class="bi bi-star-fill movie-rating-table-star" viewBox="0 0 16 16">
+                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                </svg>
+                            </div>
+                            <div class="col total-mv-am-cl">
+                                Movies: {{actor.movies}}
+                            </div>
+                        </div>
+                        <figure>
+                            <img class="d-block w-100"
+                                 src="../static/images/movie_charts/movies_rating_per_year_{{actor.id}}.png"
+                                 alt="Average movie rating per year">
+                        </figure>
+                        <figure>
+                            <img class="d-block w-100"
+                                 src="../static/images/movie_charts/ratings_compared_{{actor.id}}.png"
+                                 alt="Average movie rating compared to other actors">
+                        </figure>
+                    </div>
+                    <div class="col-4">
+                        <h4>Rating for each year</h4>
+                        <div id="accordion">
+                            {% for year in rating_per_year %}
+
+                            <div class="card" style="border: none">
+                                <div class="card-header" style="padding: 0px">
+                                    <h5 class="mb-0">
+                                        <button style="float: left" class="btn btn-link" data-toggle="collapse"
+                                                data-target="#collapse{{year}}"
+                                                aria-expanded="false" aria-controls="collapse{{year}}">
+                                            {{year}}: average rating of {{rating_per_year[year]['rating']}}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
+                                                 fill="currentColor"
+                                                 class="bi bi-star-fill movie-rating-table-star" viewBox="0 0 16 16">
+                                                <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                            </svg>
+                                            ({{rating_per_year[year]['amount']}}
+                                            {%if rating_per_year[year]['amount']==1%}
+                                            <span>movie</span>
+                                            {% else %}
+                                            <span>movies</span>
+                                            {% endif %}
+                                            )
+                                        </button>
+                                    </h5>
+                                </div>
+
+                                <div id="collapse{{year}}" class="collapse" aria-labelledby="heading{{year}}"
+                                     data-parent="#accordion">
+                                    <div class="card-body" style="float: left; text-align: left">
+                                        <ul style="padding: 0px; margin:0px;">
+                                            {%for movie in rating_per_year[year]['movies']%}
+                                            <li>
+                                                {{movie}}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
+                                                     fill="currentColor"
+                                                     class="bi bi-star-fill movie-rating-table-star"
+                                                     viewBox="0 0 16 16">
+                                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                </svg>
+                                                )
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="movie-charts my-par">
+                <h4>Distribution of genres</h4>
+
+                <div id="chartCarousel" class="carousel slide" data-ride="carousel">
+
+                    <div class="carousel-inner">
+
+
+                        <div class="carousel-item active">
+
+                            <div class="row">
+                                <div class="col-4">
+
+
+                                    <ul class="list-group list-group-flush" style="text-align: left">
+                                        <h5> all genres</h5>
+                                        {%for genre, a in all_genres.items() %}
+                                        <li class="list-group-item"><b>{{genre}}:</b> {{a}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-8">
+                                    <figure>
+                                        <img class="d-block w-100"
+                                             src="../static/images/movie_charts/movies_wordcloud_{{actor.id}}.png"
+                                             alt="Genres wordcloud">
+                                        <figcaption>Wordcloud of all genres of all movies</figcaption>
+                                    </figure>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="carousel-item">
+
+                            <div class="row">
+                                <div class="col-4">
+
+
+                                    <ul class="list-group list-group-flush" style="text-align: left">
+                                        <h5>genres of the top 5 movies</h5>
+                                        {%for genre, a in top_genres.items() %}
+                                        <li class="list-group-item"><b>{{genre}}:</b> {{a}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-8">
+                                    <figure>
+                                        <img class="d-block w-100"
+                                             src="../static/images/movie_charts/movies_piechart_{{actor.id}}.png"
+                                             alt="Genres pie chart">
+                                        <figcaption>Pie chart of all genres of the top 5 movies</figcaption>
+                                    </figure>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" style="color: #1b1b1b" href="#chartCarousel" role="button"
+                       data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#chartCarousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <a href="/" class="go-back-link"> go back to all actors</a>
+</div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+</html>

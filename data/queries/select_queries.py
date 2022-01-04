@@ -6,12 +6,12 @@ def get_all(database):
 
 
 get_auctors_query = """
-    select act.actorID, act.name, act.birthdate, AVG(rating) as avg, COUNT(mov.movieID) 
+    select act.actorID, act.name, act.birthdate, AVG(rating) as avg, COUNT(mov.movieID), act.pos
         from actors_in_movies 
         join movies as mov on actors_in_movies.movieID = mov.movieID 
         join actors as act on act.actorID = actors_in_movies.actorID 
         group by actors_in_movies.actorID 
-        order by avg DESC ;
+        order by act.pos ;
     """
 
 
@@ -44,10 +44,10 @@ def get_all_movies_of_actor_query(actorID):
     return query
 
 def get_amount_of_wins_query(actorID):
-    query =  "select count(*) from actors_have_awards " \
+    query = "select count(*) from actors_have_awards " \
              "left join awards on actors_have_awards.awardID = awards.awardID " \
              "where actors_have_awards.actorID = '{id}' " \
-             "AND winner = 1;".format(id=actorID)
+             "AND outcome = 'winner';".format(id=actorID)
     return query
 
 def get_amount_of_awards_query(actorID):
@@ -59,6 +59,6 @@ def get_amount_of_awards_query(actorID):
 def get_last_award_query(actorID):
     query = "select awards.category from actors_have_awards " \
             "left join awards on actors_have_awards.awardID = awards.awardID " \
-            "where actors_have_awards.actorID = '{id}' AND winner = 1 " \
+            "where actors_have_awards.actorID = '{id}' AND outcome = 'winner' " \
             "order by year desc limit 1;".format(id=actorID)
     return query

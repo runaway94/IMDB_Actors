@@ -9,13 +9,14 @@ create_actors_query = """
           birthdate DATE,
           image TEXT,
           bio TEXT,
-          gender ENUM('male', 'female')
+          gender ENUM('male', 'female'),
+          pos int
     );
     """
 
 create_awards_query = """
     CREATE TABLE awards (
-        awardID INTEGER PRIMARY KEY AUTO_INCREMENT,
+        awardID INTEGER PRIMARY KEY,
         year INTEGER,
         category VARCHAR(250),   
         title TEXT

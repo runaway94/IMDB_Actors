@@ -5,17 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Bootstrap CSS --> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="stylesheet" href="../static/style/style.css">
 
 
-    <title>Hello, world!</title>
+    <title>Actors</title>
 </head>
 <body>
 <!-- Image and text -->
-<nav class="navbar navbar-dark bg-dark justify-content-center"  style="text-align: center">
+<nav class="navbar navbar-dark bg-dark justify-content-center" style="text-align: center">
     <a class="navbar-brand" href="#" style="text-align: center">
         <img src="../static/images/IMDB_Logo_.png" width="50" height="30" class="d-inline-block align-top"
              alt="">
@@ -26,31 +27,31 @@
 <div class="content">
     <h3>Top 50 Actors</h3>
     <table class="table table-dark actors-table" id="actors-table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Date of birth</th>
-      <th scope="col">Amount movies</th>
-        <th scope="col">Average movie rating</th>
-        <th scope="col">Most popular movie</th>
-        <th scope="col">Newest movie</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for actorTableEntry  in actorTableEntrys %}
-    <tr>
-      <th scope="row">{{actorTableEntry.pos}}</th>
-      <td><a href ="actor?id={{actorTableEntry.id}}">{{actorTableEntry.name}}</a> </td>
-      <td>{{actorTableEntry.birth}}</td>
-      <td>{{actorTableEntry.amount_movies}}</td>
-        <td>{{actorTableEntry.rating_avg}}</td>
-        <td>{{actorTableEntry.pop_movie}}</td>
-        <td>{{actorTableEntry.new_movie}}</td>
-    </tr>
-  {% endfor %}
-  </tbody>
-</table>
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Date of birth</th>
+            <th scope="col">Amount movies</th>
+            <th scope="col">Average movie rating</th>
+            <th scope="col">Most popular movie</th>
+            <th scope="col">Newest movie</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for actorTableEntry in actorTableEntrys %}
+        <tr>
+            <th scope="row">{{actorTableEntry.pos}}</th>
+            <td><a href="actor?id={{actorTableEntry.id}}">{{actorTableEntry.name}}</a></td>
+            <td>{{actorTableEntry.birth}}</td>
+            <td>{{actorTableEntry.amount_movies}}</td>
+            <td>{{actorTableEntry.rating_avg}}</td>
+            <td>{{actorTableEntry.pop_movie}}</td>
+            <td>{{actorTableEntry.new_movie}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
