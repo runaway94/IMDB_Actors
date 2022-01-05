@@ -1,15 +1,16 @@
 from flask import Flask, render_template, request
 
-from IMDB_Actors.application.create_charts import create_charts, create_awards_per_year, create_awards_avg, \
-    general_avg_chart, movie_rating_per_year, temp2, temp
-from IMDB_Actors.data.get_from_database import get_actor_for_table, get_single_actor, get_movies_of, get_awards_of
+from IMDB_Actors.application.create_charts import awards_plot, avg_awards_plot, \
+    avg_awards_movies_bar, movie_rating_per_year, genres_wordcloud_chart, genres_pie_chart
+from IMDB_Actors.data.get_from_database import get_awards_of, \
+    get_all_actors, get_single_actor, get_movies_of
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def actors():  # put application's code here
-    actors = get_actor_for_table();
+    actors = get_all_actors();
     print(actors)
     return render_template('actors.html', actorTableEntrys=actors)
 
@@ -18,7 +19,7 @@ def actors():  # put application's code here
 def actor():
     actor_id = request.args.get('id', default=1, type=str)
     actor = get_single_actor(actor_id)
-    chart_info = general_avg_chart(actor_id)
+    chart_info = avg_awards_movies_bar(actor_id)
     return render_template('actor_detail.html', actor=actor, chart_info=chart_info)
 
 
@@ -27,9 +28,8 @@ def movies():
     actor_id = request.args.get('id', default=1, type=str)
     movies = get_movies_of(actor_id)
     actor = get_single_actor(actor_id)
-    #create_charts(movies, actor_id)
-    top_genres = temp(actor_id)
-    all_genres = temp2(actor_id)
+    top_genres = genres_pie_chart(actor_id)
+    all_genres = genres_wordcloud_chart(actor_id)
 
     avg_rating_per_year = movie_rating_per_year(actor_id)
     return render_template('actor_movies.html', actor=actor, movies=movies, len=len(movies),
@@ -41,8 +41,8 @@ def awards():
     actor_id = request.args.get('id', default=1, type=str)
     awards = get_awards_of(actor_id)
     actor = get_single_actor(actor_id)
-    create_awards_per_year(actor_id)
-    create_awards_avg(actor_id)
+    awards_plot(actor_id)
+    avg_awards_plot(actor_id)
     return render_template('actor_awards.html', actor=actor, awards=awards, len=len(awards))
 
 

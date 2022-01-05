@@ -5,14 +5,13 @@ import pandas as pd
 import pylab
 from matplotlib import pyplot as plt
 from wordcloud import WordCloud
-import os.path
 
-from IMDB_Actors.data.get_from_database import get_awards_of, get_movies_of, get_award_wins_of, get_avg_awards, \
+from IMDB_Actors.data.get_from_database import get_awards_of, get_avg_awards, \
     get_avg_amounts, get_avg_movie_rating_per_year, get_general_rating_dict, get_actor_name, get_genres_of_actor, \
-    get_genres_of_top_movies
+    get_genres_of_top_movies, get_movies_of
 
 pie_chart_path = "../presentation/static/images/movie_charts/movies_piechart_{id}.png"
-wordloud_path = "../presentation/static/images/movie_charts/movies_wordcloud_{id}.png"
+wordcloud_path = "../presentation/static/images/movie_charts/movies_wordcloud_{id}.png"
 movie_rating_path = "../presentation/static/images/movie_charts/movies_rating_per_year_{id}.png"
 movie_rating_comp_path = "../presentation/static/images/movie_charts/ratings_compared_{id}.png"
 award_path = "../presentation/static/images/award_charts/award_charts_{id}.png"
@@ -20,18 +19,7 @@ award_compare_path = "../presentation/static/images/award_charts/award_compare_c
 general_chart_path = "../presentation/static/images/charts/charts_{id}.png"
 
 
-def create_charts(movies, actorID):
-
-    pie_path = pie_chart_path.format(id=actorID)
-    create_pie_chart(movies, pie_path)
-    # if not os.path.isfile(pie_path):
-    #     create_pie_chart(movies, pie_path)
-
-    # word_path = wordloud_path.format(id=actorID)
-    # if not os.path.isfile(word_path):
-    #     create_wordcloud(movies, word_path)
-
-def temp(actor_id):
+def genres_pie_chart(actor_id):
     genres = get_genres_of_top_movies(actor_id)
     df = pd.DataFrame(genres)
     df = df.set_index('genre')
@@ -42,7 +30,8 @@ def temp(actor_id):
     plt.close()
     return df.to_dict()['amount']
 
-def temp2(actor_id):
+
+def genres_wordcloud_chart(actor_id):
     genres = get_genres_of_actor(actor_id)
     df = pd.DataFrame(genres)
     df = df.set_index('genre')
@@ -51,40 +40,15 @@ def temp2(actor_id):
     wordcloud.generate_from_frequencies(frequencies=dic)
     plt.imshow(wordcloud, interpolation="bilinear")
     plt.axis("off")
-    path = wordloud_path.format(id=actor_id)
+    path = wordcloud_path.format(id=actor_id)
     plt.savefig(path)
     plt.close()
     return dic
 
 
-def create_pie_chart(movies, path):
-    print(movies)
-    gen_for_pie = ""
-    for m in movies[:5]:
-        gen_for_pie = gen_for_pie + m['genres'] + ", "
-    print(gen_for_pie)
-    genres = dict(Counter(gen_for_pie.split(',')))
-    plt.pie(list(genres.values()), labels=genres.keys())
-    plt.axis('equal')
-    plt.savefig(path)
-    plt.close()
-
-
-def create_wordcloud(movies, path):
-    genres_text = ""
-    for m in movies:
-        genres_text = genres_text + m['genres'] + " "
-
-    wordcloud = WordCloud(background_color="white").generate(genres_text)
-    plt.imshow(wordcloud, interpolation="bilinear")
-    plt.axis("off")
-    plt.savefig(path)
-    plt.close()
-
-
-def create_awards_per_year(actor_id):
-    award_wins = get_award_wins_of(actor_id)
+def awards_plot(actor_id):
     awards = get_awards_of(actor_id)
+    award_wins = [award for award in awards if award['outcome'] == 'Winner']
     movies = get_movies_of(actor_id)
     ax = plt.subplot()
 
@@ -112,8 +76,9 @@ def create_awards_per_year(actor_id):
     plt.close()
 
 
-def create_awards_avg(actor_id):
-    actor_wins = get_award_wins_of(actor_id)
+def avg_awards_plot(actor_id):
+    awards = get_awards_of(actor_id)
+    actor_wins = [award for award in awards if award['outcome'] == 'Winner']
     avg_wins = get_avg_awards()
     print(avg_wins)
     ax = plt.subplot()
@@ -134,7 +99,7 @@ def create_awards_avg(actor_id):
     plt.close()
 
 
-def general_avg_chart(actor_id):
+def avg_awards_movies_bar(actor_id):
     index = ["nominations", "wins", "movies"]
     avg_awards_amount = get_avg_amounts("actorID", 50)
     actor_awards_amount = get_avg_amounts("\'" + actor_id + "\'", 1)
@@ -155,27 +120,6 @@ def general_avg_chart(actor_id):
     print(plotdata.to_dict())
     plt.close()
     return plotdata.to_dict()
-
-
-def movie_rating_per_year_p(actor_id):
-    ax = plt.subplot()
-    avg_rating_dict = get_avg_movie_rating_per_year(actor_id)
-    df_movie_ratings = pd.DataFrame.from_dict(avg_rating_dict, orient='index')
-    ax.plot(df_movie_ratings['rating'], label='average movie rating per year')
-    plt.title("Average movie rating per year")
-    plt.ylabel("Rating")
-    plt.xlabel("Year")
-    path = movie_rating_path.format(id=actor_id)
-    axs = plt.gca()
-    dic = get_general_rating_dict()
-    df = pd.DataFrame(dic)
-    df = df[df.avg_rating.notnull()]
-    print(df)
-    df = df.astype(float)
-    df.plot(kind='line', x='year', y='avg_rating', ax=axs, label='all actors')
-    plt.savefig(path)
-    plt.close()
-    return avg_rating_dict
 
 
 def movie_rating_per_year(actor_id):
@@ -199,24 +143,6 @@ def movie_rating_per_year(actor_id):
     df.plot(kind='line', ax=ax, y='avg_rating', label="all actors", color='#343A40')
     path = movie_rating_comp_path.format(id=actor_id)
     plt.savefig(path)
-    plt.show()
     plt.close()
 
-    # df_movie_ratings['rating'].astype(float).plot(kind='line', ax=ax, y='rating', label="avg rating", color='#f6c800')
-    # df_movie_ratings.plot(kind='line', ax=ax, y='amount', label="amount of movies", color='#343A40')
-    # plt.show()
-    # plt.close()
     return avg_rating_dict
-
-
-#
-# award_wins = get_award_wins_of("nm0000199")
-# awards = get_awards_of("nm0000199")
-# movies = get_movies_of("nm0000199")
-# create_charts(movies, "nm0000199")
-general_avg_chart( "nm0000199")
-# create_awards_per_year("nm0000199")
-# movie_rating_per_year("nm0000199")
-# create_awards_avg("nm0000173")
-# general_avg_chart("nm0000173")
-# movie_rating_per_year("nm0000173")

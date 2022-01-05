@@ -30,13 +30,13 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" href="actor?id={{actor.id}}">About</a>
+                    <a class="nav-link active" href="actor?id={{actor.actorID}}">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="movies?id={{actor.id}}">Movies</a>
+                    <a class="nav-link " href="movies?id={{actor.actorID}}">Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="awards?id={{actor.id}}">Awards</a>
+                    <a class="nav-link" href="awards?id={{actor.actorID}}">Awards</a>
                 </li>
             </ul>
         </div>
@@ -85,7 +85,7 @@
                         <div class="row stats">
                             <div class="col stats-col">
                                 <div class="number-stats">
-                                    <h3 class="number-stats-heading">{{actor.movies}}</h3>
+                                    <h3 class="number-stats-heading">{{actor.amount_movies}}</h3>
                                     <p>Movies</p>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
                         the actor has acted in, as well as award
                         nominations and wins, compared to the average for all 50 actors and actresses.
                         <div class="row" style="margin-top: 50px;">
-                            <div class="col-sm-7"><b>total movies: </b> {{chart_info['actor']['movies']}}</div>
+                            <div class="col-sm-7"><b>total movies: </b> {{chart_info['actor']['amount_movies']}}</div>
                             <div class="col-sm-5"><b>average: </b>
                                 {{chart_info['average']['movies']}}
                             </div>
@@ -141,7 +141,7 @@
                     <div class="col-8">
                         <figure>
                             <img class="d-block w-100"
-                                 src="../static/images/charts/charts_{{actor.id}}.png"
+                                 src="../static/images/charts/charts_{{actor.actorID}}.png"
                                  alt="chart comparison to average">
                             <figcaption>amount of movies and awards in comparison to average</figcaption>
                         </figure>

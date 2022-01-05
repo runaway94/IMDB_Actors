@@ -6,7 +6,7 @@ def get_all(database):
 
 
 get_auctors_query = """
-    select act.actorID, act.name, act.birthdate, AVG(rating) as avg, COUNT(mov.movieID), act.pos
+    select act.actorID, act.name, act.birthdate, AVG(rating) as rating_avg, COUNT(mov.movieID) as amount_movies, act.pos
         from actors_in_movies 
         join movies as mov on actors_in_movies.movieID = mov.movieID 
         join actors as act on act.actorID = actors_in_movies.actorID 

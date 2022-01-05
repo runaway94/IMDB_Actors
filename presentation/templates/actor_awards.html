@@ -30,13 +30,13 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link " href="actor?id={{actor.id}}">About</a>
+                    <a class="nav-link " href="actor?id={{actor.actorID}}">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="movies?id={{actor.id}}">Movies</a>
+                    <a class="nav-link " href="movies?id={{actor.actorID}}">Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="awards?id={{actor.id}}">Awards</a>
+                    <a class="nav-link active" href="awards?id={{actor.actorID}}">Awards</a>
                 </li>
             </ul>
         </div>
@@ -52,7 +52,7 @@
                             <h4>Wins and nominations in comparison to movies</h4>
                             <figure>
                                 <img class="d-block w-100"
-                                     src="../static/images/award_charts/award_charts_{{actor.id}}.png"
+                                     src="../static/images/award_charts/award_charts_{{actor.actorID}}.png"
                                      alt="Wins and nominations in comparison to movies">
                             </figure>
                         </div>
@@ -60,7 +60,7 @@
                              <h4>Wins compared to average wins of all actors</h4>
                             <figure>
                                 <img class="d-block w-100"
-                                     src="../static/images/award_charts/award_compare_charts_{{actor.id}}.png"
+                                     src="../static/images/award_charts/award_compare_charts_{{actor.actorID}}.png"
                                      alt="Wins compared to average wins of all actors">
                             </figure>
                         </div>

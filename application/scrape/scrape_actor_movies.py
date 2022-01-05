@@ -1,10 +1,7 @@
-import pprint
-
-from IMDB_Actors.application.scrape.scrape_helper import find_soup_from_url, wrap_and_escape_text
 import re
 
-# actor_url = "https://www.imdb.com/filmosearch/?role={id}&sort=year,desc&job_type=actor"
-# actress_url = f"https://www.imdb.com/filmosearch/?role={id}&sort=year,desc&job_type=actress"
+from IMDB_Actors.application.scrape.scrape_helper import find_soup_from_url, wrap_and_escape_text
+
 actress_url = "https://www.imdb.com/filmosearch/?role={id}&sort=moviemeter," \
               "asc&job_type=actress&title_type=movie&title_type=short&title_type=musicVideo&title_type=video" \
               "&title_type=tvMovie "
@@ -21,9 +18,6 @@ class Movie:
         header = header.findAll('a', href=True)
         title = header[0].get_text()
         movie_id = header[0]['href'].replace("/title/", "")[:-1]
-        # if len(header) > 1:
-        #     title = title + ", Episode " + header[1].get_text()
-        #     movie_id = header[1]['href'].replace("/title/", "")[:-1]
         self.movieID = wrap_and_escape_text(movie_id)
         self.title = wrap_and_escape_text(title)
         self.actor = wrap_and_escape_text(actor_id)
@@ -54,7 +48,7 @@ class Movie:
         return genre_list
 
 
-def scrape_movie(actor_id, gender):
+def scrape_all_movies_of_actor(actor_id, gender):
     if gender == "'female'":
         url = actress_url.format(id=actor_id)
     else:
@@ -73,8 +67,6 @@ def scrape_movie_from_url(URL, movie_list, actor):
 
     for m in movies:
         movie_list.append(Movie(actor, m))
-        # movie = find_movie(m, actor)
-        # movie_list.append(movie)
 
     next_page = soap.find('a', attrs={'class': 'next-page'}, href=True)
     if next_page is not None:
@@ -118,27 +110,3 @@ def find_runtime(movie_entry):
         return 0
     return runtime_finding.get_text().replace("min", "").replace(".", "")
 
-
-def find_movie(movie_entry, actor):
-    header = movie_entry.find('h3', attrs={'class': 'lister-item-header'})
-    if header is None:
-        return
-    header = header.findAll('a', href=True)
-    title = header[0].get_text()
-    movie_id = header[0]['href'].replace("/title/", "")[:-1]
-    if len(header) > 1:
-        title = title + ", Episode " + header[1].get_text()
-        movie_id = header[1]['href'].replace("/title/", "")[:-1]
-    movie = {
-        "movieID": wrap_and_escape_text(movie_id),
-        "title": wrap_and_escape_text(title),
-        "actor": wrap_and_escape_text(actor),
-        "year": find_year(movie_entry),
-        "genres": find_genres(movie_entry),
-        "rating": find_rating(movie_entry),
-        "runtime": find_runtime(movie_entry)
-    }
-    # print(movie)
-    return movie
-
-# scrape_movie("nm0000234", "'female'")

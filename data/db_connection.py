@@ -3,14 +3,10 @@ import mysql
 from IMDB_Actors.data.db_config import get_config
 from mysql.connector import Error
 
-from IMDB_Actors.data.queries import insert_queries
+from IMDB_Actors.data.queries import insert_queries, create_queries
 
 
 class Connection:
-    table_pk_pairs = {
-
-    }
-
     def __init__(self):
         config = get_config()
         self.host = config["host"]
@@ -29,9 +25,15 @@ class Connection:
             )
 
         except Error as e:
-            print(f"The error '{e}' occurred")
+            print(f"The error '{e}' occurred. Please check your input.")
 
         return connection
+
+    def test_connection(self):
+        connection = self.create_connection()
+        if connection is None:
+            return False
+        return True
 
     def create_connection_to_database(self):
         connection = None
@@ -49,8 +51,9 @@ class Connection:
 
         return connection
 
-    def execute_query(self, query):
-        connection = self.create_connection_to_database()
+    def execute_query(self, query, connection=None):
+        if connection is None:
+            connection = self.create_connection_to_database()
         cursor = connection.cursor()
         try:
             cursor.execute(query)
@@ -59,9 +62,9 @@ class Connection:
             print(query + " did not work.")
             print(f"The error '{e}' occurred")
 
-    def execute_read_query_dict(self, query):
+    def execute_read_query(self, query, dict_res=True):
         connection = self.create_connection_to_database()
-        cursor = connection.cursor(dictionary=True)
+        cursor = connection.cursor(dictionary=dict_res)
         result = None
         try:
             cursor.execute(query)
@@ -70,6 +73,7 @@ class Connection:
         except Error as e:
             print(query + " did not work.")
             print(f"The error '{e}' occurred")
+
 
     def save_value(self, value, table, pk=None):
         if pk is None or not self.exists(table, pk):
@@ -81,7 +85,7 @@ class Connection:
     def exists(self, table, pk):
         pk_name = self.get_primary_key_name(table)
         query = f"SELECT 1 FROM {table} WHERE {pk_name} = {pk};"
-        reply = self.execute_read_query_dict(query)
+        reply = self.execute_read_query(query)
         if len(reply) == 0:
             return False
         return True
@@ -95,7 +99,23 @@ class Connection:
             WHERE t.constraint_type='PRIMARY KEY'
             AND t.table_name='{table}';
         """
-        reply = self.execute_read_query_dict(query)
+        reply = self.execute_read_query(query)
         if len(reply) == 1:
             return reply[0]["COLUMN_NAME"]
         return None
+
+    def init_data_base(self):
+        # create database schema
+        connection = self.create_connection()
+        self.execute_query(create_queries.create_database_schema_query, connection)
+
+        # drop all tables
+        self.execute_query(create_queries.drop_all_tables)
+
+        # create databases
+        self.execute_query(create_queries.create_actors_query)
+        self.execute_query(create_queries.create_awards_query)
+        self.execute_query(create_queries.create_movies_query)
+        self.execute_query(create_queries.create_actors_in_movies_query)
+        self.execute_query(create_queries.create_actors_have_awards_query)
+        self.execute_query(create_queries.create_genres)

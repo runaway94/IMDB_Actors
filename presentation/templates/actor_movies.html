@@ -30,13 +30,13 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
-                    <a class="nav-link " href="actor?id={{actor.id}}">About</a>
+                    <a class="nav-link " href="actor?id={{actor.actorID}}">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="movies?id={{actor.id}}">Movies</a>
+                    <a class="nav-link active" href="movies?id={{actor.actorID}}">Movies</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="awards?id={{actor.id}}">Awards</a>
+                    <a class="nav-link" href="awards?id={{actor.actorID}}">Awards</a>
                 </li>
             </ul>
         </div>
@@ -58,7 +58,7 @@
                     <tbody>
                     {%for i in range(0, 5)%}
                     <tr>
-                        <th class="movie-num-col" scope="row">{{movies[i].pos}}</th>
+                        <th class="movie-num-col" scope="row">{{i+1}}</th>
                         <td class="movie-title-col">{{movies[i].title}}</td>
 
                         {%if movies[i].year==0%}
@@ -83,7 +83,7 @@
                             </svg>
                         </td>
                         {% endif %}
-                        <td class="movie-genres-col">{{movies[i].genres}}</td>
+                        <td class="movie-genres-col">{{movies[i].genres_readable}}</td>
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -124,7 +124,7 @@
                                 </svg>
                             </td>
                             {% endif %}
-                            <td class="movie-genres-col">{{movies[i].genres}}</td>
+                            <td class="movie-genres-col">{{movies[i].genres_readable}}</td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -146,17 +146,17 @@
                                 </svg>
                             </div>
                             <div class="col total-mv-am-cl">
-                                Movies: {{actor.movies}}
+                                Movies: {{actor.amount_movies}}
                             </div>
                         </div>
                         <figure>
                             <img class="d-block w-100"
-                                 src="../static/images/movie_charts/movies_rating_per_year_{{actor.id}}.png"
+                                 src="../static/images/movie_charts/movies_rating_per_year_{{actor.actorID}}.png"
                                  alt="Average movie rating per year">
                         </figure>
                         <figure>
                             <img class="d-block w-100"
-                                 src="../static/images/movie_charts/ratings_compared_{{actor.id}}.png"
+                                 src="../static/images/movie_charts/ratings_compared_{{actor.actorID}}.png"
                                  alt="Average movie rating compared to other actors">
                         </figure>
                     </div>
@@ -241,7 +241,7 @@
                                 <div class="col-8">
                                     <figure>
                                         <img class="d-block w-100"
-                                             src="../static/images/movie_charts/movies_wordcloud_{{actor.id}}.png"
+                                             src="../static/images/movie_charts/movies_wordcloud_{{actor.actorID}}.png"
                                              alt="Genres wordcloud">
                                         <figcaption>Wordcloud of all genres of all movies</figcaption>
                                     </figure>
@@ -267,7 +267,7 @@
                                 <div class="col-8">
                                     <figure>
                                         <img class="d-block w-100"
-                                             src="../static/images/movie_charts/movies_piechart_{{actor.id}}.png"
+                                             src="../static/images/movie_charts/movies_piechart_{{actor.actorID}}.png"
                                              alt="Genres pie chart">
                                         <figcaption>Pie chart of all genres of the top 5 movies</figcaption>
                                     </figure>

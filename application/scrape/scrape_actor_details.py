@@ -1,9 +1,8 @@
 import json
 
-from IMDB_Actors.application.scrape.scrape_actor_awards import Award, scrape_all_awards_of_actor
-from IMDB_Actors.application.scrape.scrape_actor_movies import scrape_movie
+from IMDB_Actors.application.scrape.scrape_actor_awards import scrape_all_awards_of_actor
+from IMDB_Actors.application.scrape.scrape_actor_movies import scrape_all_movies_of_actor
 from IMDB_Actors.application.scrape.scrape_helper import find_soup_from_url, wrap_and_escape_text
-from IMDB_Actors.data.save_to_database import persist_information
 
 
 class Actor:
@@ -23,8 +22,9 @@ class Actor:
         actor_detail = soup.find('script', attrs={'type': 'application/ld+json'})
 
         # make json readable
-        strip = str(actor_detail)[35:-9]
-        data = json.loads(str(strip))
+        #strip = str(actor_detail)[35:-9]
+        #data = json.loads(str(strip))
+        data = json.loads(actor_detail.string)
 
         # find gender
         actor_gender = soup.find(attrs={'id': 'jumpto'}).find_all('a')
@@ -51,7 +51,7 @@ class Actor:
         self.__setattr__("awards", awards[1:])
 
     def scrape_movies(self):
-        movies = scrape_movie(self.actorID, self.gender)
+        movies = scrape_all_movies_of_actor(self.actorID, self.gender)
         self.__setattr__("movies", movies)
 
     def get_actor_information(self):
@@ -64,55 +64,3 @@ class Actor:
             "bio": self.bio,
             "gender": self.gender
         }
-
-
-def scrape_actor(actor_id, pos):
-    actor = {
-        "pos": pos,
-        "actorID": "\'" + actor_id + "\'"
-    }
-    scrape_actor_information("https://www.imdb.com/name/{id}".format(id=actor_id), actor)
-    scrape_actor_bio("https://www.imdb.com/name/{id}/bio".format(id=actor_id), actor)
-    return actor
-
-
-def scrape_actor_information(actor_url, actor):
-    soup = find_soup_from_url(actor_url)
-
-    # find details of actor
-    actor_detail = soup.find('script', attrs={'type': 'application/ld+json'})
-
-    # make json readable
-    strip = str(actor_detail)[35:-9]
-    data = json.loads(str(strip))
-
-    # find gender
-    actor_gender = soup.find(attrs={'id': 'jumpto'}).find_all('a')
-    gender = 'male'
-    for g in actor_gender:
-        ref = g['href']
-        if "actress" in ref:
-            gender = 'female'
-
-    # update new information
-    actor.update({
-        "name": wrap_and_escape_text(data['name']),
-        "birthdate": "\'" + data['birthDate'] + "\'",
-        "image": "\'" + data['image'] + "\'",
-        "gender": "\'" + gender + "\'"
-    })
-
-    return actor
-
-
-def scrape_actor_bio(actor_bio_url, actor):
-    soup = find_soup_from_url(actor_bio_url)
-    bio = soup.find(attrs={'class': 'soda odd'}).find('p')
-    actor.update({
-        "bio": wrap_and_escape_text(str(bio))
-    })
-    return actor
-
-
-a = Actor("nm0000234", 7)
-persist_information(a)

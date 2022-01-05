@@ -42,8 +42,8 @@
         {% for actorTableEntry in actorTableEntrys %}
         <tr>
             <th scope="row">{{actorTableEntry.pos}}</th>
-            <td><a href="actor?id={{actorTableEntry.id}}">{{actorTableEntry.name}}</a></td>
-            <td>{{actorTableEntry.birth}}</td>
+            <td><a href="actor?id={{actorTableEntry.actorID}}">{{actorTableEntry.name}}</a></td>
+            <td>{{actorTableEntry.birthdate}}</td>
             <td>{{actorTableEntry.amount_movies}}</td>
             <td>{{actorTableEntry.rating_avg}}</td>
             <td>{{actorTableEntry.pop_movie}}</td>
