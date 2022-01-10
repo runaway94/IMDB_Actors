@@ -1,3 +1,8 @@
+"""app.py
+--------
+starts web application and returns corresponding templates"""
+import logging
+
 from flask import Flask, render_template, request
 
 from IMDB_Actors.application.create_charts import awards_plot, avg_awards_plot, \
@@ -5,18 +10,20 @@ from IMDB_Actors.application.create_charts import awards_plot, avg_awards_plot, 
 from IMDB_Actors.data.get_from_database import get_awards_of, \
     get_all_actors, get_single_actor, get_movies_of
 
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
 app = Flask(__name__)
 
 
 @app.route('/')
-def actors():  # put application's code here
-    actors = get_all_actors();
-    print(actors)
-    return render_template('actors.html', actorTableEntrys=actors)
+def actors():
+    actors_list = get_all_actors();
+    return render_template('actors.html', actorTableEntrys=actors_list)
 
 
 @app.route('/actor')
-def actor():
+def actor_detail():
     actor_id = request.args.get('id', default=1, type=str)
     actor = get_single_actor(actor_id)
     chart_info = avg_awards_movies_bar(actor_id)
@@ -24,7 +31,7 @@ def actor():
 
 
 @app.route('/movies')
-def movies():
+def actor_movies():
     actor_id = request.args.get('id', default=1, type=str)
     movies = get_movies_of(actor_id)
     actor = get_single_actor(actor_id)
@@ -37,7 +44,7 @@ def movies():
 
 
 @app.route('/awards')
-def awards():
+def actor_awards():
     actor_id = request.args.get('id', default=1, type=str)
     awards = get_awards_of(actor_id)
     actor = get_single_actor(actor_id)

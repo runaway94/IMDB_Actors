@@ -1,5 +1,11 @@
+"""create_queries.py
+--------
+stores all queries needed to create the tables and the database
+
+"""
+
 # cerate schema
-create_database_schema_query = "CREATE DATABASE IF NOT EXISTS imdb"
+create_database_schema_query = "CREATE DATABASE IF NOT EXISTS {db_name}"
 
 # cerate databases
 create_actors_query = """

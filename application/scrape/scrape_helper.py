@@ -1,22 +1,33 @@
+"""scrape_helper.py
+--------
+Library that contains functions for the scraping
+"""
 import sys
 
 import requests
 from bs4 import BeautifulSoup
 
 
-def find_soup_from_url(URL):
+def find_soup_from_url(url):
+    """creates soup from url
+
+    :param url: url to website
+    :type url: str
+    :returns: soup of website
+    :rtype: BeautifulSoup
     """
-    Returns the soup from a URL
-    """
-    page = requests.get(URL)
+    page = requests.get(url)
     soup = BeautifulSoup(page.content, "html.parser")
     return soup
 
 
 def wrap_and_escape_text(text):
-    """
-    Escapes quotes in texts and removes html tags.
-    Converts text into a format that can be stored as a string in the database.
+    """makes strings easier to dave in databases
+
+    :param text: text to escape
+    :type text: str
+    :returns: escaped text
+    :rtype: str
     """
     text = text.replace("'", "''")
     text = BeautifulSoup(text, "lxml").text
@@ -25,10 +36,9 @@ def wrap_and_escape_text(text):
 
 
 def print_progress_bar(iteration):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
+    """Call in a loop to create terminal progress bar
+    :param iteration: current iteration
+    :type iteration: int
     """
     filled_length = int(100 * iteration // 50)
     bar = '█' * filled_length + '-' * (100 - filled_length)

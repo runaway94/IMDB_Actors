@@ -1,8 +1,21 @@
+"""save_to_database.py
+--------
+"""
 from IMDB_Actors.data.db_connection import Connection
 
 
 def persist_information(actor):
-    con = Connection()
+    """saves actor in database, as well as his awards and the movies he played in
+
+    :param actor: actor to save in db
+    :type actor: Actor
+    """
+    try:
+        con = Connection()
+    except (FileNotFoundError, ConnectionError):
+        print("Connection to database failed. Please check your configurations.")
+        print(f"Failed to save {actor.name}")
+        return
 
     # save actor
     actor_info = actor.get_actor_information()
@@ -32,4 +45,3 @@ def persist_information(actor):
         }
         con.save_value(movie_actor_link, 'actors_in_movies')
 
-    print(f"{actor.name} saved")

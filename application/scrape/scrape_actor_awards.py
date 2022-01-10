@@ -1,6 +1,10 @@
+"""scrape_actor_awards.py
+--------
+"""
 import hashlib
 
 from IMDB_Actors.application.scrape.scrape_helper import find_soup_from_url, wrap_and_escape_text
+from IMDB_Actors.constants import award_URL
 
 
 def find_year(award_entry, last_award):
@@ -33,6 +37,15 @@ def find_description(award_entry, last_award):
 
 class Award:
     def __init__(self, title=None, award_entry=None, last_award=None):
+        """Scrapes all important information from award entry
+
+        :param title: name of the award
+        :type title: str
+        :param award_entry: award entry to scrape from
+        :type award_entry: PageElement
+        :param last_award: last added award
+        :type last_award: Award
+        """
         if award_entry is not None:
             self.title = title
             self.year = find_year(award_entry, last_award)
@@ -42,6 +55,11 @@ class Award:
             self.generate_key()
 
     def get_award_info(self):
+        """returns data to save in database
+
+        :returns: data to save in database
+        :rtype: dict
+        """
         return {
             "awardID": self.awardID,
             "year": self.year,
@@ -50,6 +68,11 @@ class Award:
         }
 
     def get_linking_information(self):
+        """returns data to save in database
+
+        :returns: data to save in database
+        :rtype: dict
+        """
         return {
             "awardID": self.awardID,
             "outcome": self.outcome,
@@ -57,14 +80,22 @@ class Award:
         }
 
     def generate_key(self):
-        s = str(self.__dict__)
+        """generates unique primary key for awards table
+        """
+        s = str(self.get_award_info)
         key = int(hashlib.sha1(s.encode("utf-8")).hexdigest(), 16) % (10 ** 8)
         self.__setattr__("awardID", key)
 
 
 def scrape_all_awards_of_actor(actor_id):
-    award_URL = f"https://www.imdb.com/name/{actor_id}/awards?ref_=nm_ql_2"
-    soup = find_soup_from_url(award_URL)
+    """Scrapes all awards of one actor
+    :type actor_id: str
+    :param actor_id: id of the actor the awards are to get scraped of
+    :returns: list of all awards
+    :rtype: list
+    """
+    award_url = award_URL.format(actorID=actor_id)
+    soup = find_soup_from_url(award_url)
     awards = [Award()]
 
     award_names = soup.find(attrs={'class': 'article listo'}).findAll('h3')

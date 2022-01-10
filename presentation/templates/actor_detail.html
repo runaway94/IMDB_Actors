@@ -59,7 +59,7 @@
                     <div class="col-9">
                         <div class="row actor-details-row">
                             <div class="col">
-                                Born: <b>{{actor.birth}}</b>
+                                Born: <b>{{actor.birthdate}}</b>
                             </div>
                             <div class="col">
                                 Gender: <b>{{actor.gender}}</b>
@@ -121,7 +121,7 @@
                         the actor has acted in, as well as award
                         nominations and wins, compared to the average for all 50 actors and actresses.
                         <div class="row" style="margin-top: 50px;">
-                            <div class="col-sm-7"><b>total movies: </b> {{chart_info['actor']['amount_movies']}}</div>
+                            <div class="col-sm-7"><b>total movies: </b> {{actor.amount_movies}}</div>
                             <div class="col-sm-5"><b>average: </b>
                                 {{chart_info['average']['movies']}}
                             </div>

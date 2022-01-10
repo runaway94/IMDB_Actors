@@ -99,7 +99,7 @@
                         <tbody>
                         {%for i in range(5, len)%}
                         <tr>
-                            <th class="movie-num-col" scope="row">{{movies[i].pos}}</th>
+                            <th class="movie-num-col" scope="row">{{i+6}}</th>
                             <td class="movie-title-col">{{movies[i].title}}</td>
 
                             {%if movies[i].year==0%}
