@@ -36,6 +36,8 @@ def find_description(award_entry, last_award):
 
 
 class Award:
+    """Class that stores all important Award information
+    """
     def __init__(self, title=None, award_entry=None, last_award=None):
         """Scrapes all important information from award entry
 

@@ -10,6 +10,7 @@ from IMDB_Actors.constants import actor_detail_url, actor_bio_url
 
 
 class Actor:
+    """Scrapes all important information of an actor"""
     def __init__(self, actor_id, pos):
         """Scrapes all important information of an actor
 

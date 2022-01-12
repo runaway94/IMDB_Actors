@@ -22,8 +22,6 @@ def scrape_data():
 
     print_progress_bar(0)
     for i, actor in enumerate(actor_objects):
-        if i < 38:
-            continue
         actor_id = actor['url'].replace("/name/", "")[:-1]
         actor_pos = actor['position']
 

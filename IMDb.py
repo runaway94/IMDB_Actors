@@ -19,14 +19,14 @@ global running
 running = True
 
 logo_text = """
-  _____ __  __ _____  ____    __  __            _         _____                                
- |_   _|  \/  |  __ \|  _ \  |  \/  |          (_)       / ____|                               
-   | | | \  / | |  | | |_) | | \  / | _____   ___  ___  | (___   ___ _ __ __ _ _ __   ___ _ __ 
-   | | | |\/| | |  | |  _ <  | |\/| |/ _ \ \ / / |/ _ \  \___ \ / __| '__/ _` | '_ \ / _ \ '__|
-  _| |_| |  | | |__| | |_) | | |  | | (_) \ V /| |  __/  ____) | (__| | | (_| | |_) |  __/ |   
- |_____|_|  |_|_____/|____/  |_|  |_|\___/ \_/ |_|\___| |_____/ \___|_|  \__,_| .__/ \___|_|   
-                                                                              | |              
-                                                                              |_|              
+
+  ___ __  __ ____  ____    ____                                 
+ |_ _|  \/  |  _ \| __ )  / ___|  ___ _ __ __ _ _ __   ___ _ __ 
+  | || |\/| | | | |  _ \  \___ \ / __| '__/ _` | '_ \ / _ \ '__|
+  | || |  | | |_| | |_) |  ___) | (__| | | (_| | |_) |  __/ |   
+ |___|_|  |_|____/|____/  |____/ \___|_|  \__,_| .__/ \___|_|   
+                                               |_|              
+                                               |_|              
 """
 
 
@@ -36,13 +36,13 @@ def print_help_text():
     help_text = f"In this application you can scrape information about the top 50 most popular actors" \
                 f" and actresses from a imdb website.\n Afterwards you can analyze the information about each actor, " \
                 f"their movies and awards. \n\n" \
-                f"     -----------------------COMMANDS-----------------------\n" \
-                f"     {start_from_scratch_command}: {start_from_scratch.__doc__} " \
-                f"{help_command}: { print_help_text.__doc__} " \
-                f"{configure_database_command}: {configure_database.__doc__} " \
-                f"{scrape_command}: {scrape_information.__doc__} " \
-                f"{start_web_app_command}: {start_web_app.__doc__} " \
-                f"{exit_command}: {exit_application.__doc__} " \
+                f"-----------------------COMMANDS-----------------------\n " \
+                f"{start_from_scratch_command}: {start_from_scratch.__doc__.splitlines()[0]}\n " \
+                f"{help_command}: { print_help_text.__doc__.splitlines()[0]}\n " \
+                f"{configure_database_command}: {configure_database.__doc__.splitlines()[0]}\n " \
+                f"{scrape_command}: {scrape_information.__doc__.splitlines()[0]}\n " \
+                f"{start_web_app_command}: {start_web_app.__doc__.splitlines()[0]}\n " \
+                f"{exit_command}: {exit_application.__doc__.splitlines()[0]}\n " \
                 f"------------------------------------------------------\n" \
                 f"If you are new to this application you can simply use {start_from_scratch_command} and you will be guided."
     print(help_text)
@@ -101,8 +101,12 @@ def create_db(con):
               f"be lost.\n"
               f"If you want to rename the database type '-rename'. \n"
               f"If you would like to continue anyways type '-continue.")
-        if not check_answer('-continue', '-rename'):
+        if check_answer('-continue', '-rename') == -1:
+            print("Database creation aborted.")
+            return False
+        if check_answer('-continue', '-rename') == 0:
             rename_database(con)
+
 
     print("Database and tables created successfully.")
     con.init_data_base()
@@ -178,11 +182,13 @@ def check_answer(yes_answer, no_answer):
     """
     answer = input().lower()
     if answer == no_answer:
-        return False
+        return 0
+    elif answer == "-abort":
+        return -1
     elif answer != yes_answer:
         print(f"invalid argument. Please type '{yes_answer}' to agree or '{no_answer}'.")
         return check_answer(yes_answer, no_answer)
-    return True
+    return 1
 
 
 def switcher_user_input(input):
