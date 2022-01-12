@@ -3,10 +3,10 @@
 commandline application to control program by user input"""
 import threading
 
-from IMDB_Actors.application.scrape.scrape import scrape_data
-from IMDB_Actors.data.db_config import init_config, update_config
-from IMDB_Actors.data.db_connection import Connection
-from IMDB_Actors.presentation.app import app
+from application.scrape.scrape import scrape_data
+from data.db_config import init_config, update_config
+from data.db_connection import Connection
+from presentation.app import app
 
 start_from_scratch_command = "--start"
 configure_database_command = "--configure"
