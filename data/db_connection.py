@@ -1,10 +1,13 @@
 """db_connection.py
 --------
 """
+from json import JSONDecodeError
+
 import mysql
 from mysql.connector import Error
 
 from IMDB_Actors.data.db_config import get_config
+from IMDB_Actors.data.exception import FaultyDatabaseConfiguration
 from IMDB_Actors.data.queries import insert_queries, create_queries
 from IMDB_Actors.data.queries.select_queries import select_database_query, primary_key_query
 
@@ -15,16 +18,15 @@ class Connection:
     def __init__(self):
         """"loads configuration
 
-        :raises: FileNotFoundError
+        :raises: MissingDatabaseConfiguration
          """
-        try:
-            config = get_config()
-            self.host = config["host"]
-            self.user = config["user"]
-            self.password = config["password"]
-            self.database = config["database"]
-        except FileNotFoundError:
-            raise
+
+        config = get_config()
+        self.host = config["host"]
+        self.user = config["user"]
+        self.password = config["password"]
+        self.database = config["database"]
+
 
     def create_connection(self):
         """"creates a connection
@@ -42,9 +44,10 @@ class Connection:
                 passwd=self.password
             )
 
-        except Error as e:
-            print(f"The error '{e}' occurred. Please check your database configuration.")
-            raise ConnectionError
+        except (ValueError, ConnectionError, Error) as e:
+            print("-----------------------ERROR-----------------------")
+            print(f"The error '{e}' occurred.")
+            raise FaultyDatabaseConfiguration
 
         return connection
 

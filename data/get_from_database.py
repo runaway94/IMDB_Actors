@@ -2,6 +2,7 @@
 --------
 """
 from IMDB_Actors.data.db_connection import Connection
+from IMDB_Actors.data.exception import FaultyDatabaseConfiguration, MissingDatabaseConfiguration
 from IMDB_Actors.data.queries.select_queries import *
 
 
@@ -11,8 +12,15 @@ def get_all_actors():
     :returns list of all actors
     :rtype: list(dict)
     """
-    con = Connection()
-    reply = con.execute_read_query(get_actors_query)
+    try:
+        con = Connection()
+        reply = con.execute_read_query(get_actors_query)
+    except (FaultyDatabaseConfiguration, MissingDatabaseConfiguration) as e:
+        print("-----------------------ERROR-----------------------")
+        print("failed to get all actors")
+        print(e.message)
+        return
+
     for actor in reply:
         actor["rating_avg"] = str(round(actor["rating_avg"], 2))
         actor["pop_movie"] = get_pop_movie(actor["actorID"], con)
@@ -61,8 +69,14 @@ def get_single_actor(actor_id):
     :returns: all information of one specific actor needed for the 'about' page
     :rtype: dict
     """
-    con = Connection()
-    actor = con.execute_read_query(get_actor_information_query.format(id=actor_id))[0]
+    try:
+        con = Connection()
+        actor = con.execute_read_query(get_actor_information_query.format(id=actor_id))[0]
+    except (FaultyDatabaseConfiguration, MissingDatabaseConfiguration) as e:
+        print("-----------------------ERROR-----------------------")
+        print("failed to get actor")
+        print(e.message)
+        return
 
     # awards
     award_info = get_awards_of(actor_id, con)
@@ -107,8 +121,22 @@ def get_awards_of(actor_id, con=None):
     :rtype: list(dict)
     """
     if con is None:
-        con = Connection()
-    awards = con.execute_read_query(all_awards_of_query.format(actor_id=actor_id))
+
+        try:
+            con = Connection()
+        except MissingDatabaseConfiguration as e:
+            print("-----------------------ERROR-----------------------")
+            print(e.message)
+            return
+
+    try:
+        awards = con.execute_read_query(all_awards_of_query.format(actor_id=actor_id))
+    except FaultyDatabaseConfiguration as e:
+        print("-----------------------ERROR-----------------------")
+        print("failed to get awards")
+        print(e.message)
+        return
+
     return awards
 
 
@@ -123,8 +151,18 @@ def get_movies_of(actor_id, con=None):
     :rtype: list(dict)
     """
     if con is None:
-        con = Connection()
-    movies = con.execute_read_query(all_movies_of_query.format(actor_id=actor_id))
+        try:
+            con = Connection()
+        except MissingDatabaseConfiguration as e:
+            print(e.message)
+            return
+
+    try:
+        movies = con.execute_read_query(all_movies_of_query.format(actor_id=actor_id))
+    except FaultyDatabaseConfiguration as e:
+        print(e.message)
+        return
+
     for movie in movies:
         genres_reply = con.execute_read_query(genres_of_query.format(movie_id=movie['movieID']))
         genres = [d['title'] for d in genres_reply]
@@ -142,7 +180,11 @@ def get_avg_awards():
     :returns: average awards of all actors
     :rtype: dict
     """
-    con = Connection()
+    try:
+        con = Connection()
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return
     awards_reply = con.execute_read_query(avg_awards_query, False)
     awards_avg = {}
     for row in awards_reply:
@@ -162,7 +204,11 @@ def get_avg_amounts(actor_id, amount=None):
     :returns: list of results
     :rtype: list
     """
-    con = Connection()
+    try:
+        con = Connection()
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return
     awards = con.execute_read_query(f"select * from actors_have_awards where actorID={actor_id};")
     winners = len([award for award in awards if award['outcome'] == 'Winner'])
     nominee = (len(awards) - winners)
@@ -185,7 +231,11 @@ def get_avg_movie_rating_per_year(actor_id):
     :returns: average movie rating of of specific actor per year
     :rtype: dict
     """
-    con = Connection()
+    try:
+        con = Connection()
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return
     reply = con.execute_read_query(avg_rating_year_query.format(actor_id=actor_id))
     avg_rating_dict = {}
     for row in reply:
@@ -218,7 +268,11 @@ def get_general_rating_dict():
     :returns: average movie rating of of all actors per year
     :rtype: dict
     """
-    con = Connection()
+    try:
+        con = Connection()
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return
     movies_reply = con.execute_read_query(general_rating_query)
     return movies_reply
 
@@ -230,7 +284,11 @@ def get_actor_name(actor_id):
     :returns: name of actor
     :rtype: str
     """
-    con = Connection()
+    try:
+        con = Connection()
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return
     movies_reply = con.execute_read_query(actor_name_query.format(actor_id=actor_id))
     return movies_reply[0]['name']
 
@@ -242,7 +300,11 @@ def get_genres_of_actor(actor_id):
     :returns: all genres of one actor
     :rtype: list
     """
-    con = Connection()
+    try:
+        con = Connection()
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return
     reply = con.execute_read_query(all_genres_query.format(actor_id=actor_id))
     return reply
 
@@ -254,7 +316,11 @@ def get_genres_of_top_movies(actor_id):
     :returns: genres of top movies of one actor
     :rtype: list
     """
-    con = Connection()
+    try:
+        con = Connection()
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return
     reply = con.execute_read_query(genres_top_movies_query.format(actor_id=actor_id))
     return reply
 

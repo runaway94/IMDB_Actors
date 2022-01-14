@@ -3,8 +3,10 @@
 module that saves, updates and reads the database configuration
 """
 import json
+from json import JSONDecodeError
 
 from IMDB_Actors.constants import db_config
+from IMDB_Actors.data.exception import MissingDatabaseConfiguration
 
 config_path = db_config
 
@@ -35,8 +37,11 @@ def update_config(key, value):
     :param value: new value
     :raises: FileNotFoundError
     """
-    with open(config_path, 'r') as f:
-        config = json.load(f)
+    try:
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+    except (FileNotFoundError, JSONDecodeError):
+        raise MissingDatabaseConfiguration
 
     # edit the data
     config[key] = value
@@ -57,8 +62,5 @@ def get_config():
         with open(config_path, 'r') as f:
             config = json.load(f)
             return config
-    except FileNotFoundError:
-        print("There is no database configuration yet.")
-        raise
-
-
+    except (FileNotFoundError, JSONDecodeError):
+        raise MissingDatabaseConfiguration

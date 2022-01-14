@@ -2,6 +2,7 @@
 --------
 """
 from IMDB_Actors.data.db_connection import Connection
+from IMDB_Actors.data.exception import MissingDatabaseConfiguration
 
 
 def persist_information(actor):
@@ -12,8 +13,9 @@ def persist_information(actor):
     """
     try:
         con = Connection()
-    except (FileNotFoundError, ConnectionError):
-        print("Connection to database failed. Please check your configurations.")
+    except MissingDatabaseConfiguration as e:
+        print("-----------------------ERROR-----------------------")
+        print(e.message)
         print(f"Failed to save {actor.name}")
         return
 

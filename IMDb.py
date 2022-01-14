@@ -1,12 +1,28 @@
 """IMBd.py
 --------
 commandline application to control program by user input"""
+import sys
+import os
+import time
+
+myDir = os.getcwd()
+sys.path.append(myDir)
+
+from pathlib import Path
+
+path = Path(myDir)
+a = str(path.parent.absolute())
+
+sys.path.append(a)
+
 import threading
+from json import JSONDecodeError
 
 from application.scrape.scrape import scrape_data
 from data.db_config import init_config, update_config
 from data.db_connection import Connection
 from presentation.app import app
+from IMDB_Actors.data.exception import MissingDatabaseConfiguration, FaultyDatabaseConfiguration
 
 start_from_scratch_command = "--start"
 configure_database_command = "--configure"
@@ -38,7 +54,7 @@ def print_help_text():
                 f"their movies and awards. \n\n" \
                 f"-----------------------COMMANDS-----------------------\n " \
                 f"{start_from_scratch_command}: {start_from_scratch.__doc__.splitlines()[0]}\n " \
-                f"{help_command}: { print_help_text.__doc__.splitlines()[0]}\n " \
+                f"{help_command}: {print_help_text.__doc__.splitlines()[0]}\n " \
                 f"{configure_database_command}: {configure_database.__doc__.splitlines()[0]}\n " \
                 f"{scrape_command}: {scrape_information.__doc__.splitlines()[0]}\n " \
                 f"{start_web_app_command}: {start_web_app.__doc__.splitlines()[0]}\n " \
@@ -74,12 +90,15 @@ def configure_database():
     user_password = input("Password: ")
     database_name = input("Name of your database: ")
     init_config(host_name, user_name, user_password, database_name)
+    print("Database configuration updated.")
     try:
         con = Connection()
         con.create_connection()
-    except (FileNotFoundError, ConnectionError):
+    except (MissingDatabaseConfiguration, FaultyDatabaseConfiguration) as e:
+        print(e.message)
+        print("Connection to database failed. Please check your configuration.")
         return False
-    print("Database configuration updated.")
+    print("Connection to database possible.")
     return True
 
 
@@ -93,7 +112,8 @@ def create_db(con):
     """
     try:
         con.create_connection()
-    except ConnectionError:
+    except (ConnectionError, FaultyDatabaseConfiguration) as e:
+        print(e.message)
         print("Connection to database failed. Please check your configurations.")
         return False
     if con.database_exists():
@@ -105,8 +125,7 @@ def create_db(con):
             print("Database creation aborted.")
             return False
         if check_answer('-continue', '-rename') == 0:
-            rename_database(con)
-
+            return rename_database(con)
 
     print("Database and tables created successfully.")
     con.init_data_base()
@@ -120,7 +139,11 @@ def rename_database(con):
     :type con: Connection
     """
     new_name = input("Enter new name:")
-    update_config("database", new_name)
+    try:
+        update_config("database", new_name)
+    except MissingDatabaseConfiguration as e:
+        print(e.message)
+        return False
     print("Rename successful. Starting to create databases...")
     create_db(con)
 
@@ -141,8 +164,9 @@ def scrape_information():
             print(f"Some thing went wrong during the scraping: {e}\n"
                   f"Please type '--scrape' to try again.")
 
-    except (FileNotFoundError, ConnectionError):
-        print("Connection to database failed. Please check your configurations.")
+    except (MissingDatabaseConfiguration, FaultyDatabaseConfiguration) as e:
+        print(e.message)
+        print("Connection to database failed.")
         return False
     return True
 
@@ -153,13 +177,14 @@ def start_web_app():
     try:
         con = Connection()
         con.create_connection_to_database()
-        web_thread = threading.Thread(target=app.run)
-        web_thread.setDaemon(True)
+        web_thread = threading.Thread(target=app.run, daemon=True)
         web_thread.start()
         print("Web application started. Please visit http://127.0.0.1:5000/ in your browser.")
+        time.sleep(1)
 
-    except (ConnectionError, FileNotFoundError):
-        print("Connection to database failed. Please check your configurations.")
+    except (MissingDatabaseConfiguration, FaultyDatabaseConfiguration) as e:
+        print(e.message)
+        print("Connection to database failed.")
 
 
 def exit_application():
